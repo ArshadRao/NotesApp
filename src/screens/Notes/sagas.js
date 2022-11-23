@@ -1,7 +1,11 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { GET_NOTES, ADD_NOTE, EDIT_NOTE, DELETE_NOTE } from './actionTypes';
 import { baseEndpoint } from '../constants';
-import { getNotesFailure, getNotesSuccess } from './actionCreators';
+import {
+  deleteNoteSuccess,
+  getNotesFailure,
+  getNotesSuccess,
+} from './actionCreators';
 
 export default function* noteSaga() {
   yield takeEvery(GET_NOTES, getNotes);
@@ -23,7 +27,7 @@ export function* getNotes() {
 }
 
 export function* addNote(action) {
-  const { data } = action.payload;
+  const data = action.payload;
 
   const params = {
     id: data.id,
@@ -45,7 +49,7 @@ export function* addNote(action) {
 }
 
 export function* editNote(action) {
-  const { data } = action.payload;
+  const data = action.payload;
 
   const params = {
     title: data.title,
@@ -66,7 +70,7 @@ export function* editNote(action) {
 }
 
 export function* deleteNote(action) {
-  const { data } = action.payload;
+  const data = action.payload;
 
   try {
     const response = yield call(fetch, `${baseEndpoint}note/${data.id}`, {
@@ -74,6 +78,7 @@ export function* deleteNote(action) {
     });
     const responseJSON = yield call([response, 'json']);
     console.log('api response json: ', responseJSON);
+    yield put(deleteNoteSuccess(data));
   } catch (err) {
     console.log('fetch error :', err);
   }

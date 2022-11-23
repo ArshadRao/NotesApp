@@ -23,8 +23,16 @@ import { NoteEditor } from './src/screens/NoteEditor/NoteEditor';
 
 const Stack = createNativeStackNavigator();
 
+let composeWithDevTools = middlewareToCompose => middlewareToCompose;
+if (__DEV__) {
+  composeWithDevTools = require('redux-devtools-extension').composeWithDevTools;
+}
+
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(reducers, applyMiddleware(sagaMiddleware));
+const store = createStore(
+  reducers,
+  composeWithDevTools(applyMiddleware(sagaMiddleware)),
+);
 sagaMiddleware.run(rootSaga);
 
 const App = () => (

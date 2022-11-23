@@ -30,9 +30,10 @@ export class Notes extends React.Component {
 
   async fetchData() {
     try {
+      console.log('fetch data');
       const response = await fetch(`${baseEndpoint}note`, { method: 'GET' });
-      const json = await response.json();
-      this.props.getNotesSuccess(json);
+      const data = await response.json();
+      this.props.getNotesSuccess(data);
       // this.setState({
       //   notes: json,
       // });
